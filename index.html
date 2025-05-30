@@ -67,10 +67,14 @@
   <h1>Offline Music Player</h1>
   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
     <div id="now-playing">🎵 Now Playing: None</div>
-    <button onclick="stopAllMusic()" style="padding: 5px 10px; font-size: 0.9em; background: #64a7ff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-      Stop music
-    </button>
   </div>
+  <div class="volume-control">
+    <label for="volume">🔊 Volume</label><br>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setGlobalVolume(this.value)">
+  </div>
+  <button onclick="stopAllMusic()" style="padding: 5px 10px; font-size: 0.9em; background: #64a7ff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    Stop music
+  </button>
 
   <div class="player">
     <p>Apenas Aplausos</p>
