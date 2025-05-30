@@ -17,8 +17,13 @@
       font-size: 1.5em;
       margin-bottom: 10px;
     }
-    #now-playing {
+    #now-playing-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 15px;
+    }
+    #now-playing {
       font-size: 1.1em;
       color: #333;
     }
@@ -33,7 +38,7 @@
       text-align: center;
     }
     input[type="range"] {
-      width: 80%;
+      width: 100%;
     }
     .player {
       margin: 15px 0;
@@ -61,55 +66,69 @@
       background: #f44336;
       color: white;
     }
+    .stop-all {
+      background: #555;
+      color: white;
+      padding: 6px 12px;
+      font-size: 0.9em;
+      border-radius: 5px;
+    }
+    .progress {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>Offline Music Player</h1>
-  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+  <div id="now-playing-container">
     <div id="now-playing">🎵 Now Playing: None</div>
+    <button class="stop-all" onclick="stopAllMusic()">Stop All</button>
   </div>
+
   <div class="volume-control">
     <label for="volume">🔊 Volume</label><br>
     <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setGlobalVolume(this.value)">
   </div>
-  <button onclick="stopAllMusic()" style="padding: 5px 10px; font-size: 0.9em; background: #64a7ff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-    Stop music
-  </button>
 
   <div class="player">
     <p>Apenas Aplausos</p>
     <button class="play" onclick="playMusic(0)">Play</button>
-    <button class="stop" onclick="stopMusic(0)">Stop</button>
+    <button class="stop" onclick="stopMusic(0)">Stop</button><br>
+    <input type="range" min="0" value="0" step="0.1" class="progress" data-index="0" onchange="seekMusic(this)">
   </div>
 
   <div class="player">
     <p>Entrada de convidados e musica de fundo</p>
     <button class="play" onclick="playMusic(1)">Play</button>
-    <button class="stop" onclick="stopMusic(1)">Stop</button>
+    <button class="stop" onclick="stopMusic(1)">Stop</button><br>
+    <input type="range" min="0" value="0" step="0.1" class="progress" data-index="1" onchange="seekMusic(this)">
   </div>
 
   <div class="player">
     <p>Entrada Game Show</p>
     <button class="play" onclick="playMusic(2)">Play</button>
-    <button class="stop" onclick="stopMusic(2)">Stop</button>
+    <button class="stop" onclick="stopMusic(2)">Stop</button><br>
+    <input type="range" min="0" value="0" step="0.1" class="progress" data-index="2" onchange="seekMusic(this)">
   </div>
 
   <div class="player">
     <p>Primeira Musica Game Show - get up stand up</p>
     <button class="play" onclick="playMusic(3)">Play</button>
-    <button class="stop" onclick="stopMusic(3)">Stop</button>
+    <button class="stop" onclick="stopMusic(3)">Stop</button><br>
+    <input type="range" min="0" value="0" step="0.1" class="progress" data-index="3" onchange="seekMusic(this)">
   </div>
 
   <div class="player">
     <p>Segunda musica Game Show - three little birds</p>
     <button class="play" onclick="playMusic(4)">Play</button>
-    <button class="stop" onclick="stopMusic(4)">Stop</button>
+    <button class="stop" onclick="stopMusic(4)">Stop</button><br>
+    <input type="range" min="0" value="0" step="0.1" class="progress" data-index="4" onchange="seekMusic(this)">
   </div>
 
   <script>
     const audios = [
-      new Audio('aplausos.mp3'), // musica 1
-      new Audio('audio_entrada_convidados.mp3'), // musica 2
+      new Audio('aplausos.mp3'),
+      new Audio('audio_entrada_convidados.mp3'),
       new Audio('entrada_game_show.mp3'),
       new Audio('get_up_stand_up_bob_marley.mp3'),
       new Audio('three_little_birds_bob_marley.mp3')
@@ -121,8 +140,8 @@
       stopAll();
       audios[index].play();
       const src = audios[index].src;
-      const fileName = src.substring(src.lastIndexOf('/') + 1);
-      nowPlayingDisplay.textContent = `🎵 Now Playing: Music ${fileName}`;
+      const fileName = decodeURIComponent(src.substring(src.lastIndexOf('/') + 1));
+      nowPlayingDisplay.textContent = `🎵 Now Playing: ${fileName}`;
     }
 
     function stopMusic(index) {
@@ -138,6 +157,11 @@
       });
     }
 
+    function stopAllMusic() {
+      stopAll();
+      nowPlayingDisplay.textContent = `🎵 Now Playing: None`;
+    }
+
     function setGlobalVolume(value) {
       const volume = parseFloat(value);
       audios.forEach(audio => {
@@ -145,10 +169,22 @@
       });
     }
 
-    function stopAllMusic() {
-      stopAll();
-      nowPlayingDisplay.textContent = `🎵 Now Playing: None`;
-   }
+    function seekMusic(slider) {
+      const index = parseInt(slider.dataset.index);
+      const audio = audios[index];
+      audio.currentTime = slider.value;
+    }
+
+    // Update progress bars while playing
+    audios.forEach((audio, index) => {
+      audio.addEventListener('timeupdate', () => {
+        const progress = document.querySelector(`.progress[data-index="${index}"]`);
+        if (progress && !progress.dragging) {
+          progress.value = audio.currentTime;
+          progress.max = audio.duration || 0;
+        }
+      });
+    });
   </script>
 </body>
 </html>
