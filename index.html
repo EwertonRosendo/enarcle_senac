@@ -65,50 +65,50 @@
 </head>
 <body>
   <h1>Offline Music Player</h1>
-  <div id="now-playing">🎵 Now Playing: None</div>
-
-  <div class="volume-control">
-    <label for="volume">🔊 Volume</label><br>
-    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setGlobalVolume(this.value)">
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+    <div id="now-playing">🎵 Now Playing: None</div>
+    <button onclick="stopAllMusic()" style="padding: 5px 10px; font-size: 0.9em; background: #64a7ff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Stop music
+    </button>
   </div>
 
   <div class="player">
-    <p>Music 1</p>
+    <p>Apenas Aplausos</p>
     <button class="play" onclick="playMusic(0)">Play</button>
     <button class="stop" onclick="stopMusic(0)">Stop</button>
   </div>
 
   <div class="player">
-    <p>Music 2</p>
+    <p>Entrada de convidados e musica de fundo</p>
     <button class="play" onclick="playMusic(1)">Play</button>
     <button class="stop" onclick="stopMusic(1)">Stop</button>
   </div>
 
   <div class="player">
-    <p>Music 3</p>
+    <p>Entrada Game Show</p>
     <button class="play" onclick="playMusic(2)">Play</button>
     <button class="stop" onclick="stopMusic(2)">Stop</button>
   </div>
 
   <div class="player">
-    <p>Music 4</p>
+    <p>Primeira Musica Game Show - get up stand up</p>
     <button class="play" onclick="playMusic(3)">Play</button>
     <button class="stop" onclick="stopMusic(3)">Stop</button>
   </div>
 
   <div class="player">
-    <p>Music 5</p>
+    <p>Segunda musica Game Show - three little birds</p>
     <button class="play" onclick="playMusic(4)">Play</button>
     <button class="stop" onclick="stopMusic(4)">Stop</button>
   </div>
 
   <script>
     const audios = [
-      new Audio('song1.mp3'),
-      new Audio('song2.mp3'),
-      new Audio('song3.mp3'),
-      new Audio('song4.mp3'),
-      new Audio('song5.mp3')
+      new Audio('aplausos.mp3'), // musica 1
+      new Audio('audio_entrada_convidados.mp3'), // musica 2
+      new Audio('entrada_game_show.mp3'),
+      new Audio('get_up_stand_up_bob_marley.mp3'),
+      new Audio('three_little_birds_bob_marley.mp3')
     ];
 
     const nowPlayingDisplay = document.getElementById('now-playing');
@@ -116,7 +116,9 @@
     function playMusic(index) {
       stopAll();
       audios[index].play();
-      nowPlayingDisplay.textContent = `🎵 Now Playing: Music ${index + 1}`;
+      const src = audios[index].src;
+      const fileName = src.substring(src.lastIndexOf('/') + 1);
+      nowPlayingDisplay.textContent = `🎵 Now Playing: Music ${fileName}`;
     }
 
     function stopMusic(index) {
@@ -138,6 +140,11 @@
         audio.volume = volume;
       });
     }
+
+    function stopAllMusic() {
+      stopAll();
+      nowPlayingDisplay.textContent = `🎵 Now Playing: None`;
+   }
   </script>
 </body>
 </html>
