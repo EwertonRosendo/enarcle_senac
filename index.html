@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offline Music Player</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    #now-playing {
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      color: #333;
+    }
+    .volume-control {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    input[type="range"] {
+      width: 80%;
+    }
+    .player {
+      margin: 15px 0;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .play {
+      background: #4CAF50;
+      color: white;
+    }
+    .stop {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Offline Music Player</h1>
+  <div id="now-playing">🎵 Now Playing: None</div>
+
+  <div class="volume-control">
+    <label for="volume">🔊 Volume</label><br>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="1" onchange="setGlobalVolume(this.value)">
+  </div>
+
+  <div class="player">
+    <p>Music 1</p>
+    <button class="play" onclick="playMusic(0)">Play</button>
+    <button class="stop" onclick="stopMusic(0)">Stop</button>
+  </div>
+
+  <div class="player">
+    <p>Music 2</p>
+    <button class="play" onclick="playMusic(1)">Play</button>
+    <button class="stop" onclick="stopMusic(1)">Stop</button>
+  </div>
+
+  <div class="player">
+    <p>Music 3</p>
+    <button class="play" onclick="playMusic(2)">Play</button>
+    <button class="stop" onclick="stopMusic(2)">Stop</button>
+  </div>
+
+  <div class="player">
+    <p>Music 4</p>
+    <button class="play" onclick="playMusic(3)">Play</button>
+    <button class="stop" onclick="stopMusic(3)">Stop</button>
+  </div>
+
+  <div class="player">
+    <p>Music 5</p>
+    <button class="play" onclick="playMusic(4)">Play</button>
+    <button class="stop" onclick="stopMusic(4)">Stop</button>
+  </div>
+
+  <script>
+    const audios = [
+      new Audio('song1.mp3'),
+      new Audio('song2.mp3'),
+      new Audio('song3.mp3'),
+      new Audio('song4.mp3'),
+      new Audio('song5.mp3')
+    ];
+
+    const nowPlayingDisplay = document.getElementById('now-playing');
+
+    function playMusic(index) {
+      stopAll();
+      audios[index].play();
+      nowPlayingDisplay.textContent = `🎵 Now Playing: Music ${index + 1}`;
+    }
+
+    function stopMusic(index) {
+      audios[index].pause();
+      audios[index].currentTime = 0;
+      nowPlayingDisplay.textContent = `🎵 Now Playing: None`;
+    }
+
+    function stopAll() {
+      audios.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    }
+
+    function setGlobalVolume(value) {
+      const volume = parseFloat(value);
+      audios.forEach(audio => {
+        audio.volume = volume;
+      });
+    }
+  </script>
+</body>
+</html>
